@@ -170,7 +170,22 @@ exports.book_delete_get = asyncHandler(async (req, res, next) => {
 
 // Handle book delete on POST.
 exports.book_delete_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Book delete POST");
+  const [book, allBookInstances] = await Promise.all([
+    Book.findById(req.params.id).exec(),
+    BookInstance.find({ book: req.params.id }),
+  ]);
+
+  if (allBookInstances.length > 0) {
+    res.render("book_delete", {
+      title: "Delete Book",
+      book,
+      instances: allBookInstances,
+    });
+    return;
+  } else {
+    await Book.findByIdAndRemove(req.body.id);
+    res.redirect("/catalog/books");
+  }
 });
 
 // Display book update form on GET.
