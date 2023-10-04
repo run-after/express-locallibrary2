@@ -21,7 +21,7 @@ BookInstanceSchema.virtual("url").get(function () {
 });
 
 BookInstanceSchema.virtual("due_back_yyyy_mm_dd").get(function () {
-  return DateTime.fromJSDate(this.due_back).toISODate(); // format 'YYYY-MM-DD'
+  return new Date(this.due_back).toISOString().split("T")[0]; // format 'YYYY-MM-DD'
 });
 
 // Export model
